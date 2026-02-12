@@ -80,21 +80,21 @@ Qed.
 
 Lemma env_lookup_sound :
   forall env tenv, env_has_type env tenv ->
-  forall var ty val,
-    apply_tyenv tenv var = inr ty ->
-    apply_env env var = Some val ->
-    value_has_type val ty.
+  forall search_var target_ty found_val,
+    apply_tyenv tenv search_var = inr target_ty ->
+    apply_env env search_var = Some found_val ->
+    value_has_type found_val target_ty.
 Proof.
-  induction 1; intros var ty val Htyenv Happ;
+  induction 1; intros search_var target_ty found_val Htyenv Happ;
     simpl in *.
   - discriminate.
   - repeat (rewrite String.eqb_sym in *).
-    destruct (String.eqb var var0) eqn:Heq.
+    destruct (String.eqb search_var var0) eqn:Heq.
     + apply String.eqb_eq in Heq; subst.
       inversion Htyenv; inversion Happ; subst; assumption.
     + apply IHenv_has_type; assumption.
   - repeat (rewrite String.eqb_sym in *).
-    destruct (String.eqb var proc_name) eqn:Heq.
+    destruct (String.eqb search_var proc_name) eqn:Heq.
     + apply String.eqb_eq in Heq; subst.
       inversion Happ; subst.
       constructor;

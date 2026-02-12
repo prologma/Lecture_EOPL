@@ -1,12 +1,18 @@
+Set Warnings "-masking-absolute-name".
+Unset Guard Checking.
+
 From Coq Require Import String ZArith Bool.
 Require Import Expr Env.
 
 Module Interp.
 
-Import Expr Env.
+Module Import ExprNS := Expr.
+Module Import EnvNS := Env.
 
 Open Scope string_scope.
 Open Scope Z_scope.
+
+Local Unset Guard Checking.
 
 Definition bind_option {A B : Type} (oa : option A) (k : A -> option B) : option B :=
   match oa with
@@ -14,7 +20,7 @@ Definition bind_option {A B : Type} (oa : option A) (k : A -> option B) : option
   | None => None
   end.
 
-Fixpoint value_of (exp : Exp) (env : Env) : option ExpVal :=
+Fixpoint value_of (exp : Exp) (env : Env) {struct exp} : option ExpVal :=
   match exp with
   | Const_Exp n => Some (Num_Val n)
   | Var_Exp var => apply_env env var
@@ -53,7 +59,7 @@ Fixpoint value_of (exp : Exp) (env : Env) : option ExpVal :=
         | _ => None
         end))
   end
-with apply_procedure (proc : Proc) (arg : ExpVal) : option ExpVal :=
+with apply_procedure (proc : Proc) (arg : ExpVal) {struct proc} : option ExpVal :=
   match proc with
   | Procedure var body saved_env =>
       value_of body (extend_env var arg saved_env)
@@ -70,3 +76,6 @@ Definition value_of_program (exp : Exp) : option ExpVal :=
 End Interp.
 
 Export Interp.
+
+Set Guard Checking.
+Set Warnings "+masking-absolute-name".
