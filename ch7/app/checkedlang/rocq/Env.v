@@ -1,9 +1,11 @@
+Set Warnings "-masking-absolute-name".
+
 From Coq Require Import String ZArith Bool.
 Require Import Expr.
 
 Module Env.
 
-Import Expr.
+Module Import ExprNS := Expr.
 
 Open Scope string_scope.
 Open Scope Z_scope.
@@ -18,10 +20,6 @@ with ExpVal : Type :=
 | Proc_Val (proc : Proc)
 with Proc : Type :=
 | Procedure (var : Identifier) (body : Exp) (saved_env : Env).
-
-Scheme Env_ind := Induction for Env Sort Prop
-with ExpVal_ind := Induction for ExpVal Sort Prop
-with Proc_ind := Induction for Proc Sort Prop.
 
 Definition DenVal := ExpVal.
 
@@ -85,3 +83,5 @@ Fixpoint apply_env (env : Env) (search_var : Identifier) : option ExpVal :=
 End Env.
 
 Export Env.
+
+Set Warnings "+masking-absolute-name".

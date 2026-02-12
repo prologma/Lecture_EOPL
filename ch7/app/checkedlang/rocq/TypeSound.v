@@ -1,9 +1,15 @@
+Set Warnings "-masking-absolute-name".
+
 From Coq Require Import String.
 Require Import Expr TyEnv Env Interp TypeCheck.
 
 Module TypeSound.
 
-Import Expr TyEnv Env Interp TypeCheck.
+Module Import ExprNS := Expr.
+Module Import TyEnvNS := TyEnv.
+Module Import EnvNS := Env.
+Module Import InterpNS := Interp.
+Module Import TypeCheckNS := TypeCheck.
 
 (* Typing relation for environments and expressed values. *)
 Inductive env_has_type : Env -> TyEnv -> Prop :=
@@ -212,3 +218,5 @@ Qed.
 End TypeSound.
 
 Export TypeSound.
+
+Set Warnings "+masking-absolute-name".

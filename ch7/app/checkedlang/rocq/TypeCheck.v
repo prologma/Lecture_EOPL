@@ -1,9 +1,12 @@
+Set Warnings "-masking-absolute-name".
+
 From Coq Require Import String Bool.
 Require Import Expr TyEnv.
 
 Module TypeCheck.
 
-Import Expr TyEnv.
+Module Import ExprNS := Expr.
+Module Import TyEnvNS := TyEnv.
 
 Open Scope string_scope.
 
@@ -127,3 +130,5 @@ Definition typeCheck (exp : Exp) : TyResult :=
 End TypeCheck.
 
 Export TypeCheck.
+
+Set Warnings "+masking-absolute-name".

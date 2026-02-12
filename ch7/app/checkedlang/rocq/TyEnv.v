@@ -1,11 +1,14 @@
+Set Warnings "-masking-absolute-name".
+
 From Coq Require Import String Bool.
 Require Import Expr.
 
 Module TyEnv.
 
-Import Expr.
+Module Import ExprNS := Expr.
 
 Open Scope string_scope.
+Open Scope type_scope.
 
 Inductive TyEnv : Type :=
 | Empty_tyenv
@@ -16,7 +19,7 @@ Definition empty_tyenv : TyEnv := Empty_tyenv.
 Definition extend_tyenv (var : Identifier) (ty : Ty) (env : TyEnv) : TyEnv :=
   Extend_tyenv var ty env.
 
-Definition TyResult := string + Ty.
+Definition TyResult := (string + Ty)%type.
 
 Fixpoint apply_tyenv (env : TyEnv) (var : Identifier) : TyResult :=
   match env with
@@ -30,3 +33,5 @@ Fixpoint apply_tyenv (env : TyEnv) (var : Identifier) : TyResult :=
 End TyEnv.
 
 Export TyEnv.
+
+Set Warnings "+masking-absolute-name".
